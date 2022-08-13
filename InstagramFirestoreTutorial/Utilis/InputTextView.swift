@@ -18,7 +18,7 @@ class InputTextView: UITextView {
         }
     }
     
-    private let placeholderLabel: UILabel = {
+     let placeholderLabel: UILabel = {
        let label = UILabel()
         label.textColor = .lightGray
         return label
@@ -55,5 +55,4 @@ class InputTextView: UITextView {
     @objc func handleTextDidChange() {
         placeholderLabel.isHidden = !text.isEmpty
     }
-        
 }

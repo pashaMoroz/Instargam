@@ -45,6 +45,7 @@
 		84F6F1E328A69988006A7619 /* CommentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F6F1E228A69988006A7619 /* CommentController.swift */; };
 		84F6F1E528A69B34006A7619 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F6F1E428A69B34006A7619 /* CommentCell.swift */; };
 		84F6F1E728A6B36A006A7619 /* CommentInputAccesoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F6F1E628A6B36A006A7619 /* CommentInputAccesoryView.swift */; };
+		84F6F1E928A7D11B006A7619 /* CommentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F6F1E828A7D11B006A7619 /* CommentService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +89,7 @@
 		84F6F1E228A69988006A7619 /* CommentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentController.swift; sourceTree = "<group>"; };
 		84F6F1E428A69B34006A7619 /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		84F6F1E628A6B36A006A7619 /* CommentInputAccesoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentInputAccesoryView.swift; sourceTree = "<group>"; };
+		84F6F1E828A7D11B006A7619 /* CommentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentService.swift; sourceTree = "<group>"; };
 		99639F9DA7BF4373354AA5D6 /* Pods_InstagramFirestoreTutorial.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InstagramFirestoreTutorial.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF8BC13B44B8926D94DB8C1B /* Pods-InstagramFirestoreTutorial.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstagramFirestoreTutorial.debug.xcconfig"; path = "Target Support Files/Pods-InstagramFirestoreTutorial/Pods-InstagramFirestoreTutorial.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -186,6 +188,7 @@
 				84D4C4E42893F07000D27813 /* AuthService.swift */,
 				84D4C4EB28955F6700D27813 /* UserSerice.swift */,
 				84F6F1DC28A5771B006A7619 /* PostService.swift */,
+				84F6F1E828A7D11B006A7619 /* CommentService.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -373,6 +376,7 @@
 				847C38662888687E002A0DF6 /* FeedCell.swift in Sources */,
 				84CAB2592875BB5F007D406E /* ImageSelectorController.swift in Sources */,
 				84CAB25B2875BB71007D406E /* NotificationController.swift in Sources */,
+				84F6F1E928A7D11B006A7619 /* CommentService.swift in Sources */,
 				84CAB2572875BB42007D406E /* SearchController.swift in Sources */,
 				84CAB2382874DAAD007D406E /* AppDelegate.swift in Sources */,
 				84E996CD28A10E05004D071F /* UserCell.swift in Sources */,
