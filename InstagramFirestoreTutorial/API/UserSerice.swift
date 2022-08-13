@@ -10,8 +10,7 @@ import FirebaseAuth
 typealias FirestoreCompletion = (Error?) -> Void
 
 struct UserSerice {
-    static func fetchUser(completion: @escaping(User, Error?) -> Void) {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+    static func fetchUser(withUid uid: String, completion: @escaping(User, Error?) -> Void) {
         COLLECTION_USERS.document(uid).getDocument { snapshot, error in
             guard let dictionary = snapshot?.data() else { return }
             
