@@ -10,6 +10,7 @@ import UIKit
 protocol FeedCellDelegate: AnyObject {
     func cell(_ cell: FeedCell, wantsToShowCommentsFor post: Post)
     func cell(_ cell: FeedCell, didLike post: Post)
+    func cell(_ cell: FeedCell, wantsToViewLikesFor post: Post)
 }
 
 class FeedCell: UICollectionViewCell {
@@ -50,7 +51,7 @@ class FeedCell: UICollectionViewCell {
         return iv
     }()
     
-    private lazy var likeButton: UIButton = {
+    lazy var likeButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "like_unselected"), for: .normal)
         button.tintColor = .black
@@ -72,10 +73,14 @@ class FeedCell: UICollectionViewCell {
         button.tintColor = .black
         return button
     }()
-
-    private let likeLabel: UILabel = {
+    
+    private lazy var likeLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 13)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleLikesTapped))
+        label.isUserInteractionEnabled = true
+        label.addGestureRecognizer(tap)
         return label
     }()
     
@@ -145,22 +150,30 @@ class FeedCell: UICollectionViewCell {
         delegate?.cell(self, didLike: viewModel.post)
     }
     
+    @objc func handleLikesTapped() {
+        guard let viewModel = viewModel else { return }
+        delegate?.cell(self, wantsToViewLikesFor: viewModel.post)
+    }
+    
     // MARK:  Helpers
     
     func configure() {
         guard let viewModel = viewModel else { return }
-
+        
         captionLabel.text = viewModel.caption
         postImageView.sd_setImage(with: viewModel.imageUrl)
         
         profileImageView.sd_setImage(with: viewModel.userProfileImageUrl)
         usernameButton.setTitle(viewModel.username, for: .normal)
+        
         likeLabel.text = viewModel.likesLabelText
+        likeButton.tintColor = viewModel.likeButtonTintColor
+        likeButton.setImage(viewModel.likeButtonImage, for: .normal)
         
     }
     
     func configureActionButtons() {
-       let stackView = UIStackView(arrangedSubviews: [likeButton,commentButton,shareButton])
+        let stackView = UIStackView(arrangedSubviews: [likeButton,commentButton,shareButton])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         
