@@ -25,7 +25,6 @@ class FeedController: UICollectionViewController {
         
         configureUI()
         fetchPosts()
-       
     }
     
     // MARK:  Action
@@ -53,7 +52,7 @@ class FeedController: UICollectionViewController {
     func fetchPosts() {
         guard post == nil else { return }
         
-        PostService.fetchPosts { post in
+        PostService.fetchFeedPost { post in
             self.posts = post
             self.checkIfUserLikedPost()
             self.collectionView.refreshControl?.endRefreshing()
@@ -78,9 +77,9 @@ class FeedController: UICollectionViewController {
         
         if post == nil {
             navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout",
-                                                                style: .plain,
-                                                                target: self,
-                                                                action: #selector(handleLogout))
+                                                               style: .plain,
+                                                               target: self,
+                                                               action: #selector(handleLogout))
             
             let refresher = UIRefreshControl()
             refresher.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)

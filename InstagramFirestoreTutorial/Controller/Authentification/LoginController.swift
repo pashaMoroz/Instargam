@@ -24,7 +24,7 @@ class LoginController: UIViewController {
         return iv
     }()
     
-    private let emailTextFeild: UITextField = {
+    private let emailTextField: UITextField = {
         let tf = CustomTextField(placeholder: "Email")
         tf.keyboardType = .emailAddress
         return tf
@@ -52,6 +52,7 @@ class LoginController: UIViewController {
     private let forgotPasswordButton: UIButton = {
         let button = UIButton(type: .system)
         button.attributedtitle(firstPart: "Forgot you password?", secondPart: "Get help signing in.")
+        button.addTarget(self, action: #selector(handleShowResetPassword), for: .touchUpInside)
         return button
     }()
     
@@ -73,13 +74,20 @@ class LoginController: UIViewController {
     
     // MARK:  Actions
     
+    @objc func handleShowResetPassword() {
+        let controller = ResetPasswordController()
+        controller.delegate = self
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
     @objc func handleLogin() {
         
-        guard let email = emailTextFeild.text else { return }
+        guard let email = emailTextField.text else { return }
         guard let password = passwordTextFeild.text else { return }
         
         AuthService.logUserIn(withEmail: email, password: password) { results, error in
             if let error = error {
+                self.showMessage(withTitle: "Error", message: error.localizedDescription)
                 print("DEBUG: Failed to log user in \(error.localizedDescription)")
                 return
             }
@@ -94,7 +102,7 @@ class LoginController: UIViewController {
     }
     
     @objc func texDidChange(sender: UITextField) {
-        if sender == emailTextFeild {
+        if sender == emailTextField {
             viewModel.email = sender.text
         } else {
             viewModel.password = sender.text
@@ -115,7 +123,7 @@ class LoginController: UIViewController {
         iconImage.setDimensions(height: 80, width: 120)
         iconImage.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 32)
         
-        let stack = UIStackView(arrangedSubviews: [emailTextFeild, passwordTextFeild, loginButton, forgotPasswordButton])
+        let stack = UIStackView(arrangedSubviews: [emailTextField, passwordTextFeild, loginButton, forgotPasswordButton])
         stack.axis = .vertical
         stack.spacing = 20
         view.addSubview(stack)
@@ -127,7 +135,7 @@ class LoginController: UIViewController {
     }
     
     func configureNotificationObservers() {
-        emailTextFeild.addTarget(self, action: #selector(texDidChange), for: .editingChanged)
+        emailTextField.addTarget(self, action: #selector(texDidChange), for: .editingChanged)
         passwordTextFeild.addTarget(self, action: #selector(texDidChange), for: .editingChanged)
     }
 }
@@ -139,5 +147,13 @@ extension LoginController: FormViewModel {
         loginButton.backgroundColor = viewModel.buttonBackgroundColor
         loginButton.setTitleColor(viewModel.buttonTitleColor, for: .normal)
         loginButton.isEnabled = viewModel.formIsValid
+    }
+}
+
+// MARK:   ResetPasswordControllerDelegate
+extension LoginController: ResetPasswordControllerDelegate {
+    func controllerDidSendResetPasswordLink(_ controller: ResetPasswordController) {
+        navigationController?.popViewController(animated: true)
+        showMessage(withTitle: "Success", message: "We sent a link to your email to reset your password")
     }
 }

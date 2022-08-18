@@ -30,7 +30,7 @@ class ProfileCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = .red
+        backgroundColor = .lightGray
         addSubview(postImageView)
         postImageView.fillSuperview()
     }

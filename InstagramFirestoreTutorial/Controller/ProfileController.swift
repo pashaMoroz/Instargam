@@ -138,6 +138,9 @@ extension ProfileController: ProfileHeaderDelegate {
                 self.user.isFollowed = false
                 self.fetchUserStats()
                 self.collectionView.reloadData()
+                
+                PostService.updateUserFeedAfterFollowing(user: user, didFollow: false)
+
             }
         } else {
             UserSerice.follow(uid: user.uid) { error in
@@ -148,6 +151,9 @@ extension ProfileController: ProfileHeaderDelegate {
                 NotificationService.uploadNotification(toUid: user.uid,
                                                        fromUser: currentUser,
                                                        type: .follow)
+                
+                PostService.updateUserFeedAfterFollowing(user: user, didFollow: true)
+
             }
         }
     }
