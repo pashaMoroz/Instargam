@@ -11,6 +11,7 @@ protocol FeedCellDelegate: AnyObject {
     func cell(_ cell: FeedCell, wantsToShowCommentsFor post: Post)
     func cell(_ cell: FeedCell, didLike post: Post)
     func cell(_ cell: FeedCell, wantsToViewLikesFor post: Post)
+    func cell(_ cell: FeedCell, watsToShowProfile uid: String)
 }
 
 class FeedCell: UICollectionViewCell {
@@ -25,12 +26,16 @@ class FeedCell: UICollectionViewCell {
     
     weak var delegate: FeedCellDelegate?
     
-    private let profileImageView: UIImageView = {
+    private lazy var profileImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         iv.isUserInteractionEnabled = true
         iv.backgroundColor = .lightGray
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showUserProfile))
+        iv.isUserInteractionEnabled = true
+        iv.addGestureRecognizer(tap)
         return iv
     }()
     
@@ -38,16 +43,17 @@ class FeedCell: UICollectionViewCell {
         let button = UIButton(type: .system)
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
-        button.addTarget(self, action: #selector(didTapUsername), for: .touchUpInside)
+        button.addTarget(self, action: #selector(showUserProfile), for: .touchUpInside)
         return button
     }()
     
-    private let postImageView: UIImageView = {
+    private var postImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         iv.isUserInteractionEnabled = true
         iv.image = UIImage(named: "venom-7")
+    
         return iv
     }()
     
@@ -136,8 +142,9 @@ class FeedCell: UICollectionViewCell {
     
     // MARK:  Actions
     
-    @objc func didTapUsername() {
-        print("DEBUG: did tap username")
+    @objc func showUserProfile() {
+        guard let viewModel = viewModel else { return }
+        delegate?.cell(self, watsToShowProfile: viewModel.ownerUid)
     }
     
     @objc func didTapComments() {

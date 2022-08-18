@@ -68,6 +68,7 @@ class MainTabController: UITabBarController {
         
         let profileContoller = ProfileController(user: user)
         let profile = templateNavigationController(unselectedImege: UIImage(named: "profile_unselected"), selectedImage: UIImage(named: "profile_selected"), rootViewController: profileContoller)
+       
         
         viewControllers = [feed, search, imageSelector, notification, profile]
         

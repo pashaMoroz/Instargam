@@ -32,6 +32,10 @@ struct PostViewModel {
         return post.likes
     }
     
+    var ownerUid: String {
+        return post.ownerUid
+    }
+    
     var likeButtonTintColor: UIColor {
         return post.didLike ? .red : .black
     }
