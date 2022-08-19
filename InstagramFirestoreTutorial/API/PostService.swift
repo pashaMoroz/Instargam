@@ -27,7 +27,6 @@ struct PostService {
             let docRef = COLLECTION_POSTS.addDocument(data: data, completion: completion)
             
             self.updateUserFeedAfterPost(postId: docRef.documentID)
-            
         }
     }
     
@@ -97,13 +96,17 @@ struct PostService {
         }
     }
     
-    static func fetchFeedPost(completion: @escaping([Post]) -> Void) {
+    static func fetchFeedPosts(completion: @escaping([Post]) -> Void) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         var posts = [Post]()
+        
         COLLECTION_USERS.document(uid).collection("user-feed").getDocuments { snapshot, error in
             snapshot?.documents.forEach({ document in
                 fetchPost(witnPostId: document.documentID) { post in
                     posts.append(post)
+                    
+                    posts.sort(by: {$0.timestamp.seconds > $1.timestamp.seconds })
+
                     completion(posts)
                 }
             })

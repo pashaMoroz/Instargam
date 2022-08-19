@@ -20,13 +20,17 @@ struct NotificationViewModel {
     
     var profileImageUrl: URL? { return URL(string: notification.userProfileImageUrl) }
     
+    var timestampString: String? {
+        return notification.timestamp.dateValue().timeAgoDisplay()
+    }
+    
     var notificationMessage: NSAttributedString {
         let username = notification.username
         let message = notification.type.notoficationMessage
         
         let attributedText = NSMutableAttributedString(string:username , attributes: [.font: UIFont.boldSystemFont(ofSize: 14)])
         attributedText.append(NSAttributedString(string: message, attributes: [.font: UIFont.systemFont(ofSize: 14)]))
-        attributedText.append(NSAttributedString(string: " 2m", attributes: [.font: UIFont.systemFont(ofSize: 12), .foregroundColor: UIColor.lightGray]))
+        attributedText.append(NSAttributedString(string: " \(timestampString ?? "")", attributes: [.font: UIFont.systemFont(ofSize: 12), .foregroundColor: UIColor.lightGray]))
         
         return attributedText
     }

@@ -77,6 +77,7 @@ class LoginController: UIViewController {
     @objc func handleShowResetPassword() {
         let controller = ResetPasswordController()
         controller.delegate = self
+        controller.email = emailTextField.text
         navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -97,7 +98,7 @@ class LoginController: UIViewController {
     
     @objc func handleShowSignUp() {
         let controller = RegistrationController()
-        controller.delegate = delegate 
+        controller.delegate = delegate
         navigationController?.pushViewController(controller, animated: true)
     }
     

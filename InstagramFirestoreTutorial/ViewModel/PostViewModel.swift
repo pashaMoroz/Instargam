@@ -53,6 +53,10 @@ struct PostViewModel {
         }
     }
     
+    var timestampString: String? {
+        return post.timestamp.dateValue().timeAgoDisplay()
+    }
+    
     init(post: Post) {
         self.post = post
     }
