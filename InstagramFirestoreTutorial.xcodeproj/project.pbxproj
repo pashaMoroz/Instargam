@@ -60,6 +60,7 @@
 		841A87852890142C0067631B /* CustomTextFeild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextFeild.swift; sourceTree = "<group>"; };
 		841A878728903B8C0067631B /* AuthentificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthentificationViewModel.swift; sourceTree = "<group>"; };
 		841A87892891705D0067631B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		8441E81428B000EC005B3830 /* InstagramFirestoreTutorial.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = InstagramFirestoreTutorial.entitlements; sourceTree = "<group>"; };
 		847C38652888687E002A0DF6 /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
 		847C3867288869CC002A0DF6 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		847C386A28897399002A0DF6 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
@@ -168,6 +169,7 @@
 		84CAB2362874DAAD007D406E /* InstagramFirestoreTutorial */ = {
 			isa = PBXGroup;
 			children = (
+				8441E81428B000EC005B3830 /* InstagramFirestoreTutorial.entitlements */,
 				84CAB2512874DB43007D406E /* Model */,
 				84CAB2502874DB42007D406E /* View */,
 				84CAB24F2874DB41007D406E /* ViewModel */,
@@ -574,11 +576,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = InstagramFirestoreTutorial/InstagramFirestoreTutorial.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Z5K5J5HEG4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = InstagramFirestoreTutorial/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Please allow us to access your photos so you can make post.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -604,11 +608,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = InstagramFirestoreTutorial/InstagramFirestoreTutorial.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Z5K5J5HEG4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = InstagramFirestoreTutorial/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Please allow us to access your photos so you can make post.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

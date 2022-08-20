@@ -106,6 +106,10 @@ class ResetPasswordController: UIViewController {
         view.addSubview(stack)
         stack.anchor(top: iconImage.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 32, paddingLeft: 32, paddingRight: 32)
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
 }
 
 // MARK:   FormViewModel

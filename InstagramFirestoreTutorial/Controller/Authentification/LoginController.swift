@@ -139,6 +139,10 @@ class LoginController: UIViewController {
         emailTextField.addTarget(self, action: #selector(texDidChange), for: .editingChanged)
         passwordTextFeild.addTarget(self, action: #selector(texDidChange), for: .editingChanged)
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
 }
 
 // MARK:   FormViewModel
