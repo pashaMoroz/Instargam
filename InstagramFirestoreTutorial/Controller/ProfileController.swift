@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol UpdateUserStatsDelegate: AnyObject {
+    func updateUserStats(_ controller: ProfileController)
+}
+
 class ProfileController: UICollectionViewController {
     
     private let cellIdentifier = "ProfileCell"
@@ -16,6 +20,8 @@ class ProfileController: UICollectionViewController {
     
     private var user: User
     private var posts = [Post]()
+    
+    weak var delegate: UpdateUserStatsDelegate?
     
     // MARK:  Lifecycle
     
@@ -60,6 +66,11 @@ class ProfileController: UICollectionViewController {
     }
     
     // MARK:  Helpers
+    
+    func updateStats() {
+        fetchUserStats()
+        collectionView.reloadData()
+    }
     
     func configureCollectionView() {
         navigationItem.title = user.username
@@ -153,8 +164,9 @@ extension ProfileController: ProfileHeaderDelegate {
                                                        type: .follow)
                 
                 PostService.updateUserFeedAfterFollowing(user: user, didFollow: true)
-
             }
         }
+        
+        delegate?.updateUserStats(self)
     }
 }

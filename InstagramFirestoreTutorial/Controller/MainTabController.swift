@@ -60,7 +60,11 @@ class MainTabController: UITabBarController {
         
         let feed = templateNavigationController(unselectedImege: UIImage(named: "home_unselected"), selectedImage: UIImage(named: "home_selected"), rootViewController: FeedController(collectionViewLayout: layout))
         
-        let search = templateNavigationController(unselectedImege: UIImage(named: "search_unselected"), selectedImage: UIImage(named: "search_selected"), rootViewController: SearchController())
+        let searchController = SearchController()
+        searchController.callback = { controller in
+            controller.delegate = self
+        }
+        let search = templateNavigationController(unselectedImege: UIImage(named: "search_unselected"), selectedImage: UIImage(named: "search_selected"), rootViewController: searchController)
         
         let imageSelector = templateNavigationController(unselectedImege: UIImage(named: "plus_unselected"), selectedImage: UIImage(named: "plus_selected"), rootViewController: ImageSelectorController())
         
@@ -100,6 +104,8 @@ class MainTabController: UITabBarController {
         }
     }
 }
+
+
 
 // MARK:  AuthentificationDelegate
 
@@ -146,5 +152,14 @@ extension MainTabController: UploadPostControllerDelegate {
         guard let feedNav = viewControllers?.first as? UINavigationController else { return }
         guard let feed = feedNav.viewControllers.first as? FeedController else { return }
         feed.handleRefresh()
+    }
+}
+
+extension MainTabController: UpdateUserStatsDelegate {
+
+    func updateUserStats(_ controller: ProfileController) {
+        guard let feedNav = viewControllers?[4] as? UINavigationController else { return }
+        guard let feed = feedNav.viewControllers.first as? ProfileController else { return }
+        feed.updateStats()
     }
 }
