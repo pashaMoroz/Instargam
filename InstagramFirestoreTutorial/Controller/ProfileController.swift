@@ -42,6 +42,11 @@ class ProfileController: UICollectionViewController {
         fetchPosts()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchUserStats()
+    }
+    
     // MARK:  API
     
     func checkIfuserIsFollowed() {
@@ -67,11 +72,6 @@ class ProfileController: UICollectionViewController {
     
     // MARK:  Helpers
     
-    func updateStats() {
-        fetchUserStats()
-        collectionView.reloadData()
-    }
-    
     func configureCollectionView() {
         navigationItem.title = user.username
         collectionView.backgroundColor = .white
@@ -80,6 +80,7 @@ class ProfileController: UICollectionViewController {
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: headerIdentifier)
     }
+    
 }
 
 // MARK:  UIcollectionViewDataSourse
@@ -168,5 +169,15 @@ extension ProfileController: ProfileHeaderDelegate {
         }
         
         delegate?.updateUserStats(self)
+    }
+}
+
+extension ProfileController: UpdateUserStatsDelegate {
+    
+    func updateUserStats(_ controller: ProfileController) {
+       
+        fetchUserStats()
+        collectionView.reloadData()
+        
     }
 }

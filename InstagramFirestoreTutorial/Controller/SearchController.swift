@@ -21,7 +21,7 @@ class SearchController: UIViewController {
     private var filteredUsers = [User]()
     private let searchController = UISearchController(searchResultsController: nil)
     
-    var callback: ((ProfileController)->())?
+
         
     private var inSearchMode: Bool {
         return searchController.isActive && !searchController.searchBar.text!.isEmpty
@@ -113,9 +113,8 @@ extension SearchController: UITableViewDataSource {
 extension SearchController: UITableViewDelegate  {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let user = inSearchMode ? filteredUsers[indexPath.row] : users[indexPath.row]
-        let controller = ProfileController(user: user)
-        callback?(controller)
-        navigationController?.pushViewController(controller, animated: true)
+        let profileController = ProfileController(user: user)
+        navigationController?.pushViewController(profileController, animated: true)
     }
 }
 

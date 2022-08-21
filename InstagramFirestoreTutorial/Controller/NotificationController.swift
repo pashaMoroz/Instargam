@@ -109,6 +109,7 @@ extension NotificationsController: NotificationCellDelegate {
         UserSerice.follow(uid: uid) { _ in
             self.showLoader(false)
             cell.viewModel?.notification.userIsFollowed.toggle()
+            self.handleRefresh()
         }
     }
     
@@ -117,6 +118,7 @@ extension NotificationsController: NotificationCellDelegate {
         UserSerice.unfollow(uid: uid) { _ in
             self.showLoader(false)
             cell.viewModel?.notification.userIsFollowed.toggle()
+            self.handleRefresh()
         }
     }
     
