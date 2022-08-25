@@ -22,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         UINavigationBar.appearance().standardAppearance = coloredAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = coloredAppearance
         
+        
         FirebaseApp.configure()
         
 //        if #available(iOS 10.0, *) {

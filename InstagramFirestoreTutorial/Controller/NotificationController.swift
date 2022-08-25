@@ -43,7 +43,7 @@ class NotificationsController: UITableViewController {
         notifications.forEach { notification in
             guard notification.type == .follow else { return }
             
-            UserSerice.checkIfUserIsFollowed(uid: notification.uid) { isFollowed in
+            UserService.checkIfUserIsFollowed(uid: notification.uid) { isFollowed in
                 if let index = self.notifications.firstIndex(where: { $0.id == notification.id }) {
                     self.notifications[index].userIsFollowed = isFollowed
                 }
@@ -93,7 +93,7 @@ extension NotificationsController {
 extension NotificationsController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         showLoader(true)
-        UserSerice.fetchUser(withUid: notifications[indexPath.row].uid) { user, error in
+        UserService.fetchUser(withUid: notifications[indexPath.row].uid) { user, error in
             self.showLoader(false)
             let controller = ProfileController(user: user)
             self.navigationController?.pushViewController(controller, animated: true)
@@ -106,7 +106,7 @@ extension NotificationsController: NotificationCellDelegate {
     
     func cell(_ cell: NotificationCell, wantsToFollow uid: String) {
         showLoader(true)
-        UserSerice.follow(uid: uid) { _ in
+        UserService.follow(uid: uid) { _ in
             self.showLoader(false)
             cell.viewModel?.notification.userIsFollowed.toggle()
             self.handleRefresh()
@@ -115,7 +115,7 @@ extension NotificationsController: NotificationCellDelegate {
     
     func cell(_ cell: NotificationCell, wantsToUnfollow uid: String) {
         showLoader(true)
-        UserSerice.unfollow(uid: uid) { _ in
+        UserService.unfollow(uid: uid) { _ in
             self.showLoader(false)
             cell.viewModel?.notification.userIsFollowed.toggle()
             self.handleRefresh()

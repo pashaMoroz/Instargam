@@ -7,9 +7,6 @@
 
 import UIKit
 
-protocol UpdateUserStatsDelegate: AnyObject {
-    func updateUserStats(_ controller: ProfileController)
-}
 
 class ProfileController: UICollectionViewController {
     
@@ -21,8 +18,8 @@ class ProfileController: UICollectionViewController {
     private var user: User
     private var posts = [Post]()
     
-    weak var delegate: UpdateUserStatsDelegate?
-    
+    private let refresher = UIRefreshControl()
+        
     // MARK:  Lifecycle
     
     init(user: User) {
@@ -47,17 +44,26 @@ class ProfileController: UICollectionViewController {
         fetchUserStats()
     }
     
+    // MARK:  Action
+    
+    @objc func handleRefresh() {
+        posts.removeAll()
+        fetchPosts()
+        fetchUserStats()
+        refresher.endRefreshing()
+    }
+    
     // MARK:  API
     
     func checkIfuserIsFollowed() {
-        UserSerice.checkIfUserIsFollowed(uid: user.uid) { isFollowed in
+        UserService.checkIfUserIsFollowed(uid: user.uid) { isFollowed in
             self.user.isFollowed = isFollowed
             self.collectionView.reloadData()
         }
     }
     
     func fetchUserStats() {
-        UserSerice.fetchUserStats(uid: user.uid) { stats in
+        UserService.fetchUserStats(uid: user.uid) { stats in
             self.user.stats = stats
             self.collectionView.reloadData()
         }
@@ -79,8 +85,18 @@ class ProfileController: UICollectionViewController {
         collectionView.register(ProfileHeader.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: headerIdentifier)
+        
+        refresher.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        collectionView.refreshControl = refresher
     }
     
+    func showEditProfileController() {
+        let controller = EditProfileController(user: user)
+        controller.delegate = self
+        let nav = UINavigationController(rootViewController: controller)
+        nav.modalPresentationStyle = .fullScreen
+        present(nav, animated: true)
+    }
 }
 
 // MARK:  UIcollectionViewDataSourse
@@ -144,9 +160,9 @@ extension ProfileController: ProfileHeaderDelegate {
         guard let currentUser = tab.user else { return }
         
         if user.isCurrentUser {
-            print("DEBUG: Show edit profile here..")
+            showEditProfileController()
         } else if user.isFollowed {
-            UserSerice.unfollow(uid: user.uid) { error in
+            UserService.unfollow(uid: user.uid) { error in
                 self.user.isFollowed = false
                 self.fetchUserStats()
                 self.collectionView.reloadData()
@@ -155,7 +171,7 @@ extension ProfileController: ProfileHeaderDelegate {
 
             }
         } else {
-            UserSerice.follow(uid: user.uid) { error in
+            UserService.follow(uid: user.uid) { error in
                 self.user.isFollowed = true
                 self.fetchUserStats()
                 self.collectionView.reloadData()
@@ -168,16 +184,15 @@ extension ProfileController: ProfileHeaderDelegate {
             }
         }
         
-        delegate?.updateUserStats(self)
     }
 }
 
-extension ProfileController: UpdateUserStatsDelegate {
-    
-    func updateUserStats(_ controller: ProfileController) {
-       
-        fetchUserStats()
-        collectionView.reloadData()
-        
+// MARK: - EditProfileControllerDelegate
+
+extension ProfileController: EditProfileControllerDelegate {
+    func controller(_ controller: EditProfileController, wantsToUpdate user: User) {
+        controller.dismiss(animated: true, completion: nil)
+        self.user = user
     }
 }
+

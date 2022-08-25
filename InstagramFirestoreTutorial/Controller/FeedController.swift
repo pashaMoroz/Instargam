@@ -14,6 +14,8 @@ class FeedController: UICollectionViewController {
     
     // MARK:  Properties
     
+    private let refresher = UIRefreshControl()
+    
     private var posts = [Post]() {
         didSet { collectionView.reloadData() }
     }
@@ -38,6 +40,7 @@ class FeedController: UICollectionViewController {
     @objc func handleRefresh() {
         posts.removeAll()
         fetchPosts()
+        refresher.endRefreshing()
     }
     
     @objc func handleLogout() {
@@ -93,7 +96,7 @@ class FeedController: UICollectionViewController {
                                                                target: self,
                                                                action: #selector(handleLogout))
             
-            let refresher = UIRefreshControl()
+           
             refresher.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
             collectionView.refreshControl = refresher
         }
@@ -143,7 +146,7 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
 
 extension FeedController: FeedCellDelegate {
     func cell(_ cell: FeedCell, watsToShowProfile uid: String) {
-        UserSerice.fetchUser(withUid: uid) { user, error in
+        UserService.fetchUser(withUid: uid) { user, error in
             let controller = ProfileController(user: user)
             self.navigationController?.pushViewController(controller, animated: true)
         }

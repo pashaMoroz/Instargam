@@ -28,7 +28,7 @@ struct AuthService {
     
     static func registerUser(withCredential credentials: AuthCredentials, completion: @escaping(Error?) -> Void) {
         
-        ImageUploder.uploadImage(image: credentials.profileImage) { imageUrl in
+        ImageUploader.uploadImage(image: credentials.profileImage) { imageUrl in
             Auth.auth().createUser(withEmail: credentials.email, password: credentials.password) { result, error in
                 if let error = error {
                     print("DEBUG: Failded to register user \(error.localizedDescription)")

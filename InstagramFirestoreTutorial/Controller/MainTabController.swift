@@ -32,7 +32,7 @@ class MainTabController: UITabBarController {
     
     func fetchUser() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-                UserSerice.fetchUser(withUid: uid) { user, error in
+                UserService.fetchUser(withUid: uid) { user, error in
             self.user = user
         }
     }

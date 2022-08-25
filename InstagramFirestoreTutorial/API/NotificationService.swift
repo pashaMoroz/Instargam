@@ -30,6 +30,7 @@ struct NotificationService {
             data["postImageUrl"] = post.imageUrl
         }
         
+       COLLECTION_NOTIFICATION.document(uid).setData([:])
        docRef.setData(data)
     }
     

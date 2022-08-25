@@ -14,7 +14,7 @@ struct PostService {
     static func uploadPost(caption: String, image: UIImage, user: User, completion: @escaping(FirestoreCompletion)) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
-        ImageUploder.uploadImage(image: image) { imageUrl in
+        ImageUploader.uploadImage(image: image) { imageUrl in
             let data = ["caption": caption,
                         "timestamp": Timestamp(date: Date()),
                         "likes": 0,

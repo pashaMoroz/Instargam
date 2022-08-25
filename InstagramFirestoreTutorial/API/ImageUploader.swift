@@ -7,7 +7,7 @@
 
 import FirebaseStorage
 
-struct ImageUploder {
+struct ImageUploader {
     static func uploadImage(image: UIImage, completion: @escaping(String) -> Void) {
         guard let imageData = image.jpegData(compressionQuality: 0.75) else { return }
         

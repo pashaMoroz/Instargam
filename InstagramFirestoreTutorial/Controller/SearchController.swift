@@ -49,7 +49,7 @@ class SearchController: UIViewController {
     // MARK:  API
     
     func fetchUsers() {
-        UserSerice.fetchUsers { users in
+        UserService.fetchUsers { users in
             self.users = users
             self.tableView.reloadData()
         }
