@@ -10,12 +10,36 @@ import UIKit
 private let reuseIdentifier = "UserCell"
 private let postCellIdentifier = "ProfileCell"
 
+enum UserFilterConfig: Equatable {
+    case followers(String)
+    case following(String)
+    case likes(String)
+    case messages
+    case all
+    
+    var navigationItemTitle: String {
+        switch self {
+        case .followers: return "Followers"
+        case .following: return "Following"
+        case .likes: return "Likes"
+        case .messages: return "New Message"
+        case .all: return "Search"
+        }
+    }
+}
+
+protocol SearchControllerDelegate: AnyObject {
+    func controller(_ controller: SearchController, wantsToStartChatWith user: User)
+}
+
 
 class SearchController: UIViewController {
     
     // MARK:  Properties
     
+    private let config: UserFilterConfig
     private let tableView = UITableView()
+    weak var delegate: SearchControllerDelegate?
     private var users = [User]()
     private var posts = [Post]()
     private var filteredUsers = [User]()
@@ -38,6 +62,16 @@ class SearchController: UIViewController {
     }()
     
     // MARK:  Lifecycle
+    
+    init(config: UserFilterConfig) {
+        self.config = config
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureSearchController()
@@ -49,7 +83,7 @@ class SearchController: UIViewController {
     // MARK:  API
     
     func fetchUsers() {
-        UserService.fetchUsers { users in
+        UserService.fetchUsers(forConfig: config) { users in
             self.users = users
             self.tableView.reloadData()
         }
@@ -66,17 +100,17 @@ class SearchController: UIViewController {
     
     func configureUI() {
         view.backgroundColor = .white
-        navigationItem.title = "Explore"
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        
         tableView.register(UserCell.self, forCellReuseIdentifier: reuseIdentifier)
         tableView.rowHeight = 64
+        tableView.dataSource = self
+        tableView.delegate = self
+        
         view.addSubview(tableView)
         tableView.fillSuperview()
-        tableView.isHidden = true
+        navigationItem.title = config.navigationItemTitle
+        tableView.isHidden = config == .all
         
+        guard config == .all else { return }
         view.addSubview(collectionView)
         collectionView.fillSuperview()
     }
@@ -112,9 +146,13 @@ extension SearchController: UITableViewDataSource {
 
 extension SearchController: UITableViewDelegate  {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let user = inSearchMode ? filteredUsers[indexPath.row] : users[indexPath.row]
-        let profileController = ProfileController(user: user)
-        navigationController?.pushViewController(profileController, animated: true)
+        if config == .messages {
+            delegate?.controller(self, wantsToStartChatWith: users[indexPath.row])
+        } else {
+            let user = inSearchMode ? filteredUsers[indexPath.row] : users[indexPath.row]
+            let controller = ProfileController(user: user)
+            navigationController?.pushViewController(controller, animated: true)
+        }
     }
 }
 

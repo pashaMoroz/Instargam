@@ -93,7 +93,7 @@ extension NotificationsController {
 extension NotificationsController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         showLoader(true)
-        UserService.fetchUser(withUid: notifications[indexPath.row].uid) { user, error in
+        UserService.fetchUser(withUid: notifications[indexPath.row].uid) { user in
             self.showLoader(false)
             let controller = ProfileController(user: user)
             self.navigationController?.pushViewController(controller, animated: true)

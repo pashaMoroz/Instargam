@@ -43,6 +43,11 @@ class FeedController: UICollectionViewController {
         refresher.endRefreshing()
     }
     
+    @objc func showMessages() {
+        let controller = ConversationsController()
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
     @objc func handleLogout() {
         do {
             try Auth.auth().signOut()
@@ -96,12 +101,15 @@ class FeedController: UICollectionViewController {
                                                                target: self,
                                                                action: #selector(handleLogout))
             
-           
-            refresher.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
-            collectionView.refreshControl = refresher
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "send2"), style: .plain, target: self,
+                                                                action: #selector(showMessages))
+            
         }
         
         navigationItem.title = "Feed"
+        
+        refresher.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        collectionView.refreshControl = refresher
         
     }
 }
@@ -146,7 +154,7 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
 
 extension FeedController: FeedCellDelegate {
     func cell(_ cell: FeedCell, watsToShowProfile uid: String) {
-        UserService.fetchUser(withUid: uid) { user, error in
+        UserService.fetchUser(withUid: uid) { user in
             let controller = ProfileController(user: user)
             self.navigationController?.pushViewController(controller, animated: true)
         }

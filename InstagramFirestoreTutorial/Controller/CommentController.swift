@@ -11,19 +11,19 @@ private let reuseIdentifier = "CommentCell"
 
 class CommentController: UICollectionViewController {
     
-    // MARK:  Properties
+    // MARK: - Properties
     
     private let post: Post
     private var comments = [Comment]()
     
-    private lazy var commentInputView: CommentInputAccesoryView = {
+    private lazy var commentInputView: CustomInputAccesoryView = {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
-        let cv = CommentInputAccesoryView(frame: frame)
+        let cv = CustomInputAccesoryView(config: .comments, frame: frame)
         cv.delegate = self
         return cv
     }()
     
-    // MARK:  Lifecycle
+    // MARK: - Lifecycle
     
     init(post: Post) {
         self.post = post
@@ -58,7 +58,7 @@ class CommentController: UICollectionViewController {
         tabBarController?.tabBar.isHidden = false
     }
     
-    // MARK:  API
+    // MARK: - API
     
     func fetchComments() {
         CommentService.fetchComments(forPost: post.postId) { comments in
@@ -67,7 +67,7 @@ class CommentController: UICollectionViewController {
         }
     }
     
-    // MARK:  Helpers
+    // MARK: - Helpers
     
     func configureCollectionView() {
         navigationItem.title = "Comments"
@@ -79,10 +79,9 @@ class CommentController: UICollectionViewController {
     }
 }
 
-// MARK:  UICollectionViewDataSourse
+// MARK: - UICollectionViewDataSource
 
 extension CommentController {
-    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return comments.count
     }
@@ -90,28 +89,25 @@ extension CommentController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CommentCell
         cell.viewModel = CommentViewModel(comment: comments[indexPath.row])
-        cell.backgroundColor = .white
-        
         return cell
     }
 }
 
-// MARK:  UICollectionViewDelegate
+// MARK: - UICollectionViewDelegate
 
 extension CommentController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let uid = comments[indexPath.row].uid
-        UserService.fetchUser(withUid: uid) { user, error in
+        UserService.fetchUser(withUid: uid) { user in
             let controller = ProfileController(user: user)
             self.navigationController?.pushViewController(controller, animated: true)
         }
-        
     }
 }
 
-// MARK:  UICollectionViewDelegateFlowLayout
+// MARK: - UICollectionViewDelegateFlowLayout
+
 extension CommentController: UICollectionViewDelegateFlowLayout {
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let viewModel = CommentViewModel(comment: comments[indexPath.row])
         let height = viewModel.size(forWidth: view.frame.width).height + 32
@@ -119,24 +115,23 @@ extension CommentController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-// MARK:  CommentInputAccesoryViewDelegate
+// MARK: - CommentInputAccesoryViewDelegate
 
-extension CommentController: CommentInputAccesoryViewDelegate {
-    
-    func inputView(_ inputView: CommentInputAccesoryView, wantsToUploadComment comment: String) {
-        
-        guard let tab = self.tabBarController as? MainTabController else { return }
+extension CommentController: CustomInputAccesoryViewDelegate {
+    func inputView(_ inputView: CustomInputAccesoryView, wantsToUploadText text: String) {
+        guard let tab = tabBarController as? MainTabController else { return }
         guard let currentUser = tab.user else { return }
         
-        self.showLoader(true)
+        showLoader(true)
         
-        CommentService.uploadComment(comment: comment, postID: post.postId, user: currentUser) { error in
+        CommentService.uploadComment(comment: text, post: post, user: currentUser) { error in
             self.showLoader(false)
-            inputView.clearCommentsTextView()
+            inputView.clearInputText()
+            self.fetchComments()
             
             NotificationService.uploadNotification(toUid: self.post.ownerUid,
-                                                   fromUser: currentUser,
-                                                   type: .comment, post: self.post)
+                                                   fromUser: currentUser, type: .comment,
+                                                   post: self.post)
         }
     }
 }

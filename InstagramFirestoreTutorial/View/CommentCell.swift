@@ -27,6 +27,13 @@ class CommentCell: UICollectionViewCell {
     
     private let commentLabel = UILabel()
     
+    private let commentTimeLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = .lightGray
+        return label
+    }()
+    
     
     // MARK:  Lifecycle
     
@@ -42,6 +49,9 @@ class CommentCell: UICollectionViewCell {
         commentLabel.numberOfLines = 0
         commentLabel.centerY(inView: profileImageView, leftAnchor: profileImageView.rightAnchor, paddingLeft: 8)
         commentLabel.anchor(right: rightAnchor, paddingRight: 8)
+        
+        addSubview(commentTimeLabel)
+        commentTimeLabel.anchor(top: profileImageView.bottomAnchor, left: leftAnchor, paddingTop: 5, paddingLeft: 8)
     }
     
     required init?(coder: NSCoder) {
@@ -55,6 +65,7 @@ class CommentCell: UICollectionViewCell {
         
         profileImageView.sd_setImage(with: viewModel.profileImageUrl)
         commentLabel.attributedText = viewModel.commentLabelText()
+        commentTimeLabel.text = viewModel.time
     }
 
 }

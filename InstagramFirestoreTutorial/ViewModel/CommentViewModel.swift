@@ -15,6 +15,10 @@ struct CommentViewModel {
         return URL(string: comment.profileImageUrl)
     }
     
+    var time: String? {
+        return comment.timestamp.dateValue().timeAgoDisplay()
+    }
+    
     
     init(comment: Comment) {
         self.comment = comment

@@ -32,7 +32,7 @@ class MainTabController: UITabBarController {
     
     func fetchUser() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-                UserService.fetchUser(withUid: uid) { user, error in
+                UserService.fetchUser(withUid: uid) { user in
             self.user = user
         }
     }
@@ -60,7 +60,7 @@ class MainTabController: UITabBarController {
         
         let feed = templateNavigationController(unselectedImege: UIImage(named: "home_unselected"), selectedImage: UIImage(named: "home_selected"), rootViewController: FeedController(collectionViewLayout: layout))
         
-        let search = templateNavigationController(unselectedImege: UIImage(named: "search_unselected"), selectedImage: UIImage(named: "search_selected"), rootViewController: SearchController())
+        let search = templateNavigationController(unselectedImege: UIImage(named: "search_unselected"), selectedImage: UIImage(named: "search_selected"), rootViewController: SearchController(config: .all))
         
         let imageSelector = templateNavigationController(unselectedImege: UIImage(named: "plus_unselected"), selectedImage: UIImage(named: "plus_selected"), rootViewController: ImageSelectorController())
         

@@ -12,21 +12,60 @@ import FirebaseFirestore
 typealias FirestoreCompletion = (Error?) -> Void
 
 struct UserService {
-    static func fetchUser(withUid uid: String, completion: @escaping(User, Error?) -> Void) {
+    
+    static func fetchUser(withUid uid: String, completion: @escaping(User) -> Void) {
         COLLECTION_USERS.document(uid).getDocument { snapshot, error in
             guard let dictionary = snapshot?.data() else { return }
-            
             let user = User(dictionary: dictionary)
-            completion(user, error)
+            completion(user)
         }
     }
     
-    static func fetchUsers(completion: @escaping([User])-> Void) {
-        COLLECTION_USERS.getDocuments { snapshot, error in
-            guard let snapshot = snapshot else { return }
+    static func fetchUser(withUsername username: String, completion: @escaping(User?) -> Void) {
+        COLLECTION_USERS.whereField("username", isEqualTo: username).getDocuments { snapshot, error in
+            guard let document = snapshot?.documents.first else {
+                completion(nil)
+                return
+            }
+            let user = User(dictionary: document.data())
+            completion(user)
+        }
+    }
+    
+    private static func fetchUsers(fromCollection collection: CollectionReference, completion: @escaping([User]) -> Void) {
+        var users = [User]()
+
+        collection.getDocuments { snapshot, _ in
+            guard let documents = snapshot?.documents else { return }
             
-            let users = snapshot.documents.map({ User(dictionary: $0.data()) })
-            completion(users)
+            documents.forEach({ fetchUser(withUid: $0.documentID) { user in
+                users.append(user)
+                completion(users)
+            } })
+        }
+    }
+    
+    static func fetchUsers(forConfig config: UserFilterConfig, completion: @escaping([User]) -> Void) {
+        switch config {
+        case .followers(let uid):
+            let ref = COLLECTION_FOLLOWERS.document(uid).collection("user-followers")
+            fetchUsers(fromCollection: ref, completion: completion)
+            
+        case .following(let uid):
+            let ref = COLLECTION_FOLLOWING.document(uid).collection("user-following")
+            fetchUsers(fromCollection: ref, completion: completion)
+            
+        case .likes(let postId):
+            let ref = COLLECTION_POSTS.document(postId).collection("post-likes")
+            fetchUsers(fromCollection: ref, completion: completion)
+            
+        case .all, .messages:
+            COLLECTION_USERS.getDocuments { (snapshot, error) in
+                guard let snapshot = snapshot else { return }
+                
+                let users = snapshot.documents.map({ User(dictionary: $0.data()) })
+                completion(users)
+            }
         }
     }
     
@@ -96,7 +135,7 @@ struct UserService {
                     return
                 }
                 
-                // POSTS
+                // Update image in POSTS
                 
                 COLLECTION_POSTS.whereField("ownerUid", isEqualTo: user.uid).getDocuments { snapshot, error in
                     guard let documents = snapshot?.documents else { return }
@@ -104,7 +143,7 @@ struct UserService {
                     documents.forEach({ COLLECTION_POSTS.document($0.documentID).updateData(data) })
                 }
 
-                // NOTIFICATION
+                // Update image in NOTIFICATION
                 COLLECTION_NOTIFICATION.getDocuments { snapshot, error in
                     
                     guard let snapshot = snapshot else { return }
@@ -123,7 +162,7 @@ struct UserService {
                     }
                 }
                 
-                // COMMENTS
+                // Update image in COMMENTS
                 
                 COLLECTION_POSTS.getDocuments { snapshot, error in
                     
@@ -143,7 +182,7 @@ struct UserService {
                                 COLLECTION_POSTS.document(id).collection("comments").document(document.documentID).updateData(data)
                             }
                         }
-                    }     
+                    }
                 }
                 
                 

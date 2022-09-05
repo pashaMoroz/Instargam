@@ -7,37 +7,59 @@
 
 import UIKit
 
-protocol CommentInputAccesoryViewDelegate: AnyObject {
-    func inputView(_ inputView: CommentInputAccesoryView, wantsToUploadComment comment: String)
+protocol CustomInputAccesoryViewDelegate: AnyObject {
+    func inputView(_ inputView: CustomInputAccesoryView, wantsToUploadText text: String)
 }
 
-class CommentInputAccesoryView: UIView {
+enum InputViewConfiguration {
+    case comments
+    case messages
     
-    // MARK:  Properties
+    var placeholderText: String {
+        switch self {
+        case .comments: return "Comment..."
+        case .messages: return "Message..."
+        }
+    }
     
-    weak var delegate: CommentInputAccesoryViewDelegate?
+    var actionButtonTitle: String {
+        switch self {
+        case .comments: return "Post"
+        case .messages: return "Send"
+        }
+    }
+}
+
+class CustomInputAccesoryView: UIView {
     
-    private let commentTextView: InputTextView = {
+    // MARK: - Properties
+    
+    weak var delegate: CustomInputAccesoryViewDelegate?
+    
+    private let config: InputViewConfiguration
+            
+    private lazy var commentTextView: InputTextView = {
         let tv = InputTextView()
-        tv.placeholderText = "Enter comment.."
+        tv.placeholderText = config.placeholderText
         tv.font = UIFont.systemFont(ofSize: 15)
         tv.isScrollEnabled = false
         tv.placeholderShouldCenter = true
         return tv
     }()
     
-    private let postButton: UIButton = {
+    private lazy var postButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Post", for: .normal)
+        button.setTitle(config.actionButtonTitle, for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.addTarget(self, action: #selector(handlePostTapped), for: .touchUpInside)
         return button
     }()
     
-    // MARK:  Lifecycle
+    // MARK: - Lifecycle
     
-    override init(frame: CGRect) {
+    init(config: InputViewConfiguration, frame: CGRect) {
+        self.config = config
         super.init(frame: frame)
         
         backgroundColor = .white
@@ -48,7 +70,9 @@ class CommentInputAccesoryView: UIView {
         postButton.setDimensions(height: 50, width: 50)
         
         addSubview(commentTextView)
-        commentTextView.anchor(top: topAnchor, left: leftAnchor, bottom: safeAreaLayoutGuide.bottomAnchor, right: postButton.leftAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 8, paddingRight: 8)
+        commentTextView.anchor(top: topAnchor, left: leftAnchor,
+                               bottom: safeAreaLayoutGuide.bottomAnchor, right: postButton.leftAnchor,
+                               paddingTop: 8, paddingLeft: 8, paddingBottom: 8, paddingRight: 8)
         
         let divider = UIView()
         divider.backgroundColor = .lightGray
@@ -64,15 +88,15 @@ class CommentInputAccesoryView: UIView {
         return .zero
     }
     
-    // MARK:  Actions
+    // MARK: - Actions
     
     @objc func handlePostTapped() {
-        delegate?.inputView(self, wantsToUploadComment: commentTextView.text)
+        delegate?.inputView(self, wantsToUploadText: commentTextView.text)
     }
     
-    // MARK:  Helpers
+    // MARK: - Helpers
     
-    func clearCommentsTextView() {
+    func clearInputText() {
         commentTextView.text = nil
         commentTextView.placeholderLabel.isHidden = false
     }
