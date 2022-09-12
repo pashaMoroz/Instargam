@@ -192,7 +192,8 @@ extension FeedController: FeedCellDelegate {
         }
     }
     
-    func cell(_ cell: FeedCell, wantsToViewLikesFor post: Post) {
-        print("DEBUG: \(#function)")
+    func cell(_ cell: FeedCell, wantsToViewLikesFor postId: String) {
+        let controller = SearchController(config: .likes(postId))
+        navigationController?.pushViewController(controller, animated: true)
     }
 }

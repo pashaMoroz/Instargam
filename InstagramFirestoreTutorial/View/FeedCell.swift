@@ -10,7 +10,7 @@ import UIKit
 protocol FeedCellDelegate: AnyObject {
     func cell(_ cell: FeedCell, wantsToShowCommentsFor post: Post)
     func cell(_ cell: FeedCell, didLike post: Post)
-    func cell(_ cell: FeedCell, wantsToViewLikesFor post: Post)
+    func cell(_ cell: FeedCell, wantsToViewLikesFor postId: String)
     func cell(_ cell: FeedCell, watsToShowProfile uid: String)
 }
 
@@ -158,7 +158,7 @@ class FeedCell: UICollectionViewCell {
     
     @objc func handleLikesTapped() {
         guard let viewModel = viewModel else { return }
-        delegate?.cell(self, wantsToViewLikesFor: viewModel.post)
+        delegate?.cell(self, wantsToViewLikesFor: viewModel.post.postId)
     }
     
     // MARK:  Helpers
