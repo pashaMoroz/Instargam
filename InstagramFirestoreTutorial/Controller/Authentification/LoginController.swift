@@ -96,6 +96,8 @@ class LoginController: UIViewController {
         }
     }
     
+    //тест
+    
     @objc func handleShowSignUp() {
         let controller = RegistrationController()
         controller.delegate = delegate
@@ -108,7 +110,6 @@ class LoginController: UIViewController {
         } else {
             viewModel.password = sender.text
         }
-        
         updateForm()
     }
     

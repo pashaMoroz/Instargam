@@ -99,6 +99,8 @@ class ResetPasswordController: UIViewController {
         iconImage.setDimensions(height: 80, width: 120)
         iconImage.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 32)
         
+       
+        
         
         let stack = UIStackView(arrangedSubviews: [emailTextField, resetPasswordButton])
         stack.axis = .vertical
